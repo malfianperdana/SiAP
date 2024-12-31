@@ -17,7 +17,7 @@
 
                         <div class="mb-4">
                             <label for="item_id" class="block text-sm font-medium text-gray-700">Pilih Barang</label>
-                            <select id="item_id" name="item_id" class="mt-1 block w-full">
+                            <select id="item_id" name="item_id" class="mt-1 block w-full select2" @if($detail->item_id) disabled @endif>
                                 @foreach($items as $item)
                                     <option value="{{ $item->id }}" {{ $item->id == $detail->item_id ? 'selected' : '' }}>
                                         {{ $item->name }}
@@ -45,4 +45,20 @@
             </div>
         </div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#item_id').select2({
+                placeholder: "Pilih Jenis Barang",
+                allowClear: true,
+                dropdownAutoWidth: true,
+                width: '100%',
+            }).on('select2:open', function() {
+                $('.select2-search__field').focus();
+            });
+        });
+    </script>
 </x-app-layout>

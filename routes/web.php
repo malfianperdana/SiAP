@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\RequestDetailController;
@@ -50,6 +51,16 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', [StockLogController::class, 'edit'])->name('edit');
         Route::put('update/{id}', [StockLogController::class, 'update'])->name('update');
         Route::delete('destroy/{id}', [StockLogController::class, 'destroy'])->name('destroy');
+    });
+
+    // Item
+    Route::prefix('item')->group(function () {
+        Route::get('/', [ItemController::class, 'index'])->name('jenis_barang.index');
+        Route::get('create', [ItemController::class, 'create'])->name('jenis_barang.create');
+        Route::post('store', [ItemController::class, 'store'])->name('jenis_barang.store');
+        Route::get('edit/{id}', [ItemController::class, 'edit'])->name('jenis_barang.edit');
+        Route::put('update/{id}', [ItemController::class, 'update'])->name('jenis_barang.update');
+        Route::delete('destroy/{id}', [ItemController::class, 'destroy'])->name('jenis_barang.destroy');
     });
 
 });

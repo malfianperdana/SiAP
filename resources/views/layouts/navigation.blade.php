@@ -23,6 +23,9 @@
                         <x-nav-link :href="route('stock_logs.index')" :active="request()->routeIs('stock_logs.index')">
                             {{ __('Barang Masuk') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('jenis_barang.index')" :active="request()->routeIs('jenis_barang.index')">
+                            {{ __('Ref Jenis Barang') }}
+                        </x-nav-link>                        
                     @endif
                 </div>
             </div>

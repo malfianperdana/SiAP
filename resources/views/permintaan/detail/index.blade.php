@@ -70,7 +70,7 @@
                                         </td>
                                     @endif
                                         <td class="px-4 py-2 border-b">
-                                            @if($request->status === 'rekam')
+                                            @if($request->status === 'rekam' || $request->status === 'pending')
                                                 <a href="{{ route('permintaan.detail.edit', [$request->id, $detail->id]) }}" class="text-yellow-500 hover:text-yellow-700">
                                                     Edit
                                                 </a> |

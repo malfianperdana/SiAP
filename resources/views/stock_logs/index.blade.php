@@ -25,6 +25,7 @@
                     <table class="min-w-full bg-white border border-gray-300">
                         <thead>
                             <tr>
+                                <th class="px-4 py-2 border-b text-left">No</th>
                                 <th class="px-4 py-2 border-b text-left">Nama Barang</th>
                                 <th class="px-4 py-2 border-b text-left">Jumlah Masuk</th>
                                 <th class="px-4 py-2 border-b text-left">Tanggal</th>
@@ -34,6 +35,7 @@
                         <tbody>
                             @forelse($stockLogs as $log)
                                 <tr>
+                                    <td class="px-4 py-2 border-b">{{ $loop->iteration }}</td>
                                     <td class="px-4 py-2 border-b">{{ $log->item->name }}</td>
                                     <td class="px-4 py-2 border-b">{{ $log->quantity }}</td>
                                     <td class="px-4 py-2 border-b">{{ $log->created_at->format('Y-m-d H:i') }}</td>
