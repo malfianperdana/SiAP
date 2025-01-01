@@ -11,6 +11,12 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <h2 class="text-xl font-semibold mb-4">Edit Detail Permintaan: {{ $request->request_number }}</h2>
 
+                    @if(session('error'))
+                        <div class="bg-red-500 text-white p-4 mb-4 rounded-md">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
                     <form action="{{ route('permintaan.detail.update', [$request->id, $detail->id]) }}" method="POST">
                         @csrf
                         @method('PUT')

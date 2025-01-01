@@ -71,17 +71,24 @@ class RequestDetailController extends Controller
     public function update(Request $request, HttpRequest $httpRequest, RequestDetail $detail)
     {
         $httpRequest->validate([
-            'item_id' => 'required|exists:items,id',
+            // 'item_id' => 'required|exists:items,id',
             'requested_quantity' => 'required|integer|min:1',
         ]);
 
-        $detail->update([
-            'item_id' => $httpRequest->item_id,
-            'requested_quantity' => $httpRequest->requested_quantity,
-        ]);
+        try {
+            $detail->update([
+                // 'item_id' => $httpRequest->item_id,
+                'requested_quantity' => $httpRequest->requested_quantity,
+            ]);
 
-        return redirect()->route('permintaan.detail.index', $request->id)
-                         ->with('success', 'Detail permintaan berhasil diubah.');
+            return redirect()->route('permintaan.detail.index', $request->id)
+                            ->with('success', 'Detail permintaan berhasil diubah.');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                            ->withErrors('Terjadi kesalahan saat memperbarui detail permintaan. Silakan coba lagi.')
+                            ->withInput();  // Menyertakan input lama supaya user tidak perlu mengetik ulang
+        }
     }
 
     public function destroy(Request $request, RequestDetail $detail)
