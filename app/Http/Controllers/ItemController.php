@@ -29,10 +29,14 @@ class ItemController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'unit' => 'nullable|string|max:100',
         ]);
 
-        JenisBarang::create([
+        Item::create([
             'name' => $request->name,
+            'description' => $request->description,
+            'unit' => $request->unit,
         ]);
 
         return redirect()->route('jenis_barang.index')->with('success', 'Jenis Barang berhasil direkam.');
