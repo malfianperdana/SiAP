@@ -15,11 +15,12 @@
                         </a>
 
                         <div class="flex items-center">
-                            <a href="{{ route('permintaan.detail.create', $request->id) }}"
-                                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                                @if($request->status !== 'rekam') style="display: none;" @endif>
-                                + Item
-                            </a>
+                            @if($request->status === 'rekam')
+                                <a href="{{ route('permintaan.detail.create', $request->id) }}"
+                                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                    + Item
+                                </a>
+                            @endif
 
                             @if($request->status == 'pending' && session('user_role') == 'supervisor')
                                 <button onclick="confirmAction('{{ route('permintaan.approve', $request->id) }}', 'approve')" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-4">
@@ -52,9 +53,9 @@
                                 <tr>
                                     <th class="px-4 py-2 border-b text-left">Nama Barang</th>
                                     <th class="px-4 py-2 border-b text-left">Jumlah Diminta</th>
-                                @if(session('user_role')=='supervisor')
-                                    <th class="px-4 py-2 border-b text-left">Sisa Stok</th>
-                                @endif
+                                    @if(session('user_role') == 'supervisor')
+                                        <th class="px-4 py-2 border-b text-left">Sisa Stok</th>
+                                    @endif
                                     <th class="px-4 py-2 border-b text-left">Action</th>
                                 </tr>
                             </thead>
@@ -63,13 +64,21 @@
                                     <tr>
                                         <td class="px-4 py-2 border-b">{{ $detail->item->name }}</td>
                                         <td class="px-4 py-2 border-b">{{ $detail->requested_quantity . ' ' . $detail->item->unit }}</td>
-                                    @if(session('user_role')=='supervisor')
+                                        @if(session('user_role') === 'supervisor')
+                                            <td class="px-4 py-2 border-b">
+                                                {{ $detail->remaining_stock . ' ' . $detail->item->unit }}
+                                            </td>
+                                        @endif
                                         <td class="px-4 py-2 border-b">
-                                            {{ $detail->remaining_stock . ' ' . $detail->item->unit }}
-                                        </td>
-                                    @endif
-                                        <td class="px-4 py-2 border-b">
-                                            @if($request->status === 'rekam' || $request->status === 'pending')
+                                            {{-- Kondisi untuk supervisor --}}
+                                            @if(session('user_role') === 'supervisor' && $request->status === 'pending')
+                                                <a href="{{ route('permintaan.detail.edit', [$request->id, $detail->id]) }}" class="text-yellow-500 hover:text-yellow-700">
+                                                    Edit
+                                                </a>
+                                                <span class="text-gray-500 ml-2">Hapus tidak diizinkan</span>
+                                            
+                                            {{-- Kondisi untuk pengguna saat status "rekam" --}}
+                                            @elseif(session('user_role') === 'pengguna' && $request->status === 'rekam')
                                                 <a href="{{ route('permintaan.detail.edit', [$request->id, $detail->id]) }}" class="text-yellow-500 hover:text-yellow-700">
                                                     Edit
                                                 </a> |
@@ -78,23 +87,16 @@
                                                     @method('DELETE')
                                                     <button type="submit" class="text-red-500 hover:text-red-700">Hapus</button>
                                                 </form>
+                                            
+                                            {{-- Status lainnya --}}
                                             @else
-                                                @if($request->status === 'rekam')
-                                                    <span class="inline-block px-3 py-1 text-sm font-medium text-blue-800 bg-blue-100 rounded-full">Rekam</span>
-                                                @elseif($request->status === 'pending')
-                                                    <span class="inline-block px-3 py-1 text-sm font-medium text-yellow-800 bg-yellow-100 rounded-full">Pending</span>
-                                                @elseif($request->status === 'approved')
-                                                    <span class="inline-block px-3 py-1 text-sm font-medium text-green-800 bg-green-100 rounded-full">Approved</span>
-                                                @elseif($request->status === 'rejected')
-                                                    <span class="inline-block px-3 py-1 text-sm font-medium text-red-800 bg-red-100 rounded-full">Rejected</span>
-                                                @else
-                                                    <span class="inline-block px-3 py-1 text-sm font-medium text-gray-800 bg-gray-100 rounded-full">Unknown</span>
-                                                @endif
+                                                <span class="text-gray-500">Tidak dapat diubah</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
+                            
                         </table>
                     @endif
                 </div>

@@ -12,22 +12,31 @@ class RequestController extends Controller
 {
     public function index()
     {
-        $userRole = session('user_role');
+        $userRole = session('user_role'); // Ambil peran pengguna dari session
+        $userId = auth()->id(); // Ambil ID pengguna yang sedang login
 
         if ($userRole === 'pengguna') {
-            $requests = Request::with('user', 'details.item')->get();
+            // Pengguna hanya bisa melihat permintaannya sendiri
+            $requests = Request::where('user_id', $userId)
+                ->with('user', 'details.item')
+                ->orderBy('created_at', 'desc')
+                ->get();
         } elseif ($userRole === 'supervisor') {
+            // Supervisor melihat semua permintaan kecuali dengan status 'rekam'
             $requests = Request::whereNotIn('status', ['rekam'])
                 ->with('user', 'details.item')
-                ->orderByRaw("FIELD(status, 'pending') DESC") // Urutkan status dengan 'pending' lebih dahulu
-                ->orderBy('request_number', 'asc')
+                ->orderByRaw("FIELD(status, 'pending') DESC") // Prioritaskan status 'pending'
+                ->orderBy('request_number', 'asc') // Urutkan berdasarkan nomor permintaan
                 ->get();
         } else {
+            // Peran lainnya tidak diizinkan
             abort(403, 'Unauthorized access');
         }
 
+        // Kirim data permintaan ke view
         return view('permintaan.index', compact('requests'));
     }
+
 
     public function create()
     {

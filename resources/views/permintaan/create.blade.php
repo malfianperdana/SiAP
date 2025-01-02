@@ -21,10 +21,7 @@
                         <div class="mb-4">
                             <label for="user_id" class="block text-sm font-medium text-gray-700 dark:text-gray-200">User Pemohon</label>
                             <select id="user_id" name="user_id" class="form-select mt-1 block w-full" required>
-                                <option value="">Pilih Pengguna</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                @endforeach
+                                <option value="{{ auth()->id() }}">{{ auth()->user()->name }}</option>
                             </select>
                         </div>
 
